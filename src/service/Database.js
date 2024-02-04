@@ -53,10 +53,10 @@ export const dropCollection = async () => {
     }
 };
 
-export const getJob = async (job) => {
+export const getJob = async (name) => {
     try {
         return await Job.findOne({
-            name: job.name,
+            name: name,
         });
     } catch (err) {
         console.error('Error getting job:', err);
@@ -64,16 +64,23 @@ export const getJob = async (job) => {
     }
 }
 
+export const getAllJobs = async () => {
+    try {
+      const job = await Job.find({});
+      return job
+    } catch (err) {
+      console.error(err);
+    }
+}
+
 export const saveJob = async (job) => {
     try {
         console.log("Attempt to update Job if it exists " + job);
 
-        // Assuming `projectUrl` is a unique identifier for your job.
-        // Adjust the query to match the unique identifier or condition to find the job.
-        const filter = { projectUrl: job.projectUrl };
+        const filter = { name: job.name };
         const update = {
-            projectUrl: job.projectUrl,
-            enabled: job.enabled
+            name: job.name,
+            active: job.active
         };
 
         // Set `upsert` to false to avoid creating a new document if it doesn't exist
@@ -108,5 +115,3 @@ export const createJob = async (job) => {
         console.error('Error creating job:', err);
     }
 };
-
-

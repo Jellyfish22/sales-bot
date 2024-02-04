@@ -3,12 +3,13 @@ import mongoose from 'mongoose';
 
 import { registerCommands } from './service/Commands.js';
 import { scrapeSales } from './service/Scraper.js'
-import { dropCollection, getSale, saveSale, saveJob } from './service/Database.js';
+import { dropCollection, getSale, saveSale, saveJob, getJob, getAllJobs } from './service/Database.js';
 import Sale from "./models/Sale.js"
 import Job from "./models/Job.js"
+import { PROPERTIES } from './Config.js';
 
 const url = "https://www.avalytics.xyz/collection/0x54c800d2331e10467143911aabca092d68bf4166/trades/"
- // Main entry point
+
 const client = await getClient();    
 registerCommands()
 
@@ -42,9 +43,20 @@ const beginRun = async () => {
 mongoose.connect(process.env.MONGODB_URI).then(() => {
     console.log("Connected to MongoDB");
 
-    const job = {projectUrl : "someUrl", enabled: true}
-    // saveJob(job);
-    // beginRun();
-
-    // setInterval(beginRun, 20000); 
+    runIntervalJob()
 });
+
+const runIntervalJob = async () => {
+    let i = 0
+    const run = async () => {
+      const job = await getJob(PROPERTIES.NAME)
+
+      if(job.active) {
+        beginRun()
+      }
+      i++
+    }
+    run()
+    const intervalId = setInterval(run, 10000)
+    return intervalId
+}
