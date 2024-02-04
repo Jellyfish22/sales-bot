@@ -1,4 +1,5 @@
 import Sale from "../models/Sale.js"
+import Job from "../models/Job.js"
 import mongoose from 'mongoose';
 
 // export const connectToDatabase = async () => {
@@ -51,3 +52,61 @@ export const dropCollection = async () => {
       console.error(`Error dropping collection:`, error.message);
     }
 };
+
+export const getJob = async (job) => {
+    try {
+        return await Job.findOne({
+            name: job.name,
+        });
+    } catch (err) {
+        console.error('Error getting job:', err);
+
+    }
+}
+
+export const saveJob = async (job) => {
+    try {
+        console.log("Attempt to update Job if it exists " + job);
+
+        // Assuming `projectUrl` is a unique identifier for your job.
+        // Adjust the query to match the unique identifier or condition to find the job.
+        const filter = { projectUrl: job.projectUrl };
+        const update = {
+            projectUrl: job.projectUrl,
+            enabled: job.enabled
+        };
+
+        // Set `upsert` to false to avoid creating a new document if it doesn't exist
+        const options = { new: true, upsert: false };
+
+        const updatedJob = await Job.findOneAndUpdate(filter, update, options);
+
+        if (updatedJob) {
+            console.log('Job updated successfully:', updatedJob);
+        } else {
+            console.log('Job does not exist and was not updated.');
+        }
+    } catch (err) {
+        console.error('Error updating job:', err);
+    }
+};
+
+export const createJob = async (job) => {
+    try {
+        console.log("Attempt to create Job " + job);
+
+        const newJob = new Job({ 
+            name: job.name,
+            projectUrl: job.projectUrl, 
+            active: job.active,
+            channel: job.channel,
+            interval: job.interval
+        });
+         
+        await newJob.save();
+    } catch (err) {
+        console.error('Error creating job:', err);
+    }
+};
+
+

@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 
 import { registerCommands } from './service/Commands.js';
 import { scrapeSales } from './service/Scraper.js'
-import { dropCollection, getSale, saveSale } from './service/Database.js';
+import { dropCollection, getSale, saveSale, saveJob } from './service/Database.js';
 import Sale from "./models/Sale.js"
-import { CONFIG } from './Config.js';
+import Job from "./models/Job.js"
 
 const url = "https://www.avalytics.xyz/collection/0x54c800d2331e10467143911aabca092d68bf4166/trades/"
  // Main entry point
@@ -34,8 +34,6 @@ const beginRun = async () => {
             saveSale(newSale)
             
             sendMessage(client, "1201992904814366730", newSale)
-        } else {
-            console.log("It's already " + sale)
         }
     }
     
@@ -43,8 +41,10 @@ const beginRun = async () => {
 
 mongoose.connect(process.env.MONGODB_URI).then(() => {
     console.log("Connected to MongoDB");
-    dropCollection();
-    beginRun();
 
-    setInterval(beginRun, 20000); 
+    const job = {projectUrl : "someUrl", enabled: true}
+    // saveJob(job);
+    // beginRun();
+
+    // setInterval(beginRun, 20000); 
 });

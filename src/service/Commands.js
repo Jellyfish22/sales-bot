@@ -1,17 +1,20 @@
 import { REST, Routes, SlashCommandBuilder, SlashCommandStringOption } from 'discord.js'
 import { CONFIG } from '../Config.js';
 
-// const intervalOptions = [
-//   { name: '1 minutes', value: 1 },
-//   { name: '2 minutes', value: 2 },
-//   { name: '3 minutes', value: 3 },
-//   { name: '5 minutes', value: 5 },
-//   { name: '10 minutes', value: 10 },
-//   { name: '1 hour', value: 60 },
-// ]
-
+const intervalOptions = [
+  { name: '1 minutes', value: 1 },
+  { name: '2 minutes', value: 2 },
+  { name: '3 minutes', value: 3 },
+  { name: '5 minutes', value: 5 },
+  { name: '10 minutes', value: 10 },
+  { name: '1 hours', value: 60 },
+]
 
 const getCommands = () => [
+  {
+    name: 'ping',
+    description: 'Replies with Pong!',
+  },
   new SlashCommandBuilder()
     .setName("start")
     .setDescription("Starts the sales bot"),
@@ -22,8 +25,24 @@ const getCommands = () => [
     .setName("drop-db")
     .setDescription("Drops the database. (Cafeful now)"),
   new SlashCommandBuilder()
-    .setName("interval")
-    .setDescription('The interval to scrape in minutes. 0 for manual')
+    .setName('create-job')
+    .setDescription('Creates a new scraper sales job')
+    .addStringOption((option) => option.setName('name').setDescription('Name of the collection').setRequired(true))
+    .addStringOption((option) => option.setName('url').setDescription('The URL to scrape').setRequired(true))
+    .addIntegerOption((option) =>
+      option
+        .setName('interval')
+        .setDescription('The interval to scrape in minutes')
+        .setMinValue(1)
+        .setMaxValue(60)
+        .addChoices(...intervalOptions)
+        .setRequired(true)
+    )
+    .addBooleanOption((option) =>
+      option.setName('active').setDescription('Whether the job is active').setRequired(false)
+    )
+    .addChannelOption((option) => option.setName('channel').setDescription('The channel to send the links to')),
+
 ]
 
 export const registerCommands = async () => {
