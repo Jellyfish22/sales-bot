@@ -8,7 +8,7 @@ import Sale from "./models/Sale.js"
 import Job from "./models/Job.js"
 import { PROPERTIES } from './Config.js';
 
-const url = "https://www.avalytics.xyz/collection/0x54c800d2331e10467143911aabca092d68bf4166/trades/"
+const url = "https://www.avalytics.xyz/collection/0x45a3b93955ecff23bea82d3a6e500a5e4030ca06/trades"
 
 const client = await getClient();    
 registerCommands()
@@ -34,7 +34,7 @@ const beginRun = async () => {
     
             saveSale(newSale)
             
-            sendMessage(client, "1201992904814366730", newSale)
+            sendMessage(client, PROPERTIES.CHANNEL_ID, newSale)
         }
     }
     

@@ -9,7 +9,7 @@ export const CONFIG = {
 }
 
 export const PROPERTIES = {
-  CHANNEL_ID: "1201992904814366730",
+  CHANNEL_ID: "1181994486830739466", 
   NAME: "AKUDO",
   INTERVAL: 1,
 }
